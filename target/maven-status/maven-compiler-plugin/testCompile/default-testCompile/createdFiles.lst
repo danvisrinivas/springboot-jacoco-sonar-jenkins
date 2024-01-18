@@ -1,0 +1,6 @@
+com\epam\mockito\controller\BatchControllerTest.class
+com\epam\JavaRdApplicationTests.class
+com\epam\mockito\controller\AssociateControllerTest.class
+com\epam\PrepareTestObjects.class
+com\epam\mockito\service\BatchServiceTest.class
+com\epam\mockito\service\AssociateServiceTest.class

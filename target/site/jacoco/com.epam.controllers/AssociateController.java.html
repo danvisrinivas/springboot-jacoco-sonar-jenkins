@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssociateController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java-RD</a> &gt; <a href="index.source.html" class="el_package">com.epam.controllers</a> &gt; <span class="el_source">AssociateController.java</span></div><h1>AssociateController.java</h1><pre class="source lang-java linenums">package com.epam.controllers;
+
+import com.epam.dtos.APIResponse;
+import com.epam.dtos.AssociateRequest;
+import com.epam.dtos.AssociateResponse;
+import com.epam.entities.Gender;
+import com.epam.services.AssociateService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(&quot;rd/associates&quot;)
+<span class="fc" id="L18">@Slf4j</span>
+<span class="fc" id="L19">@RequiredArgsConstructor</span>
+public class AssociateController {
+
+    public static final String SUCCESS = &quot;Success&quot;;
+    private final AssociateService associateService;
+
+
+    @PostMapping
+    public ResponseEntity&lt;APIResponse&lt;AssociateResponse&gt;&gt; createAssociate(@RequestBody @Valid AssociateRequest associateRequest)
+    {
+<span class="fc" id="L29">        log.info(&quot;AssociateController::createAssociate invoked&quot;);</span>
+<span class="fc" id="L30">        AssociateResponse associateResponse = associateService.createAssociate(associateRequest);</span>
+        APIResponse&lt;AssociateResponse&gt; responseDTO = APIResponse
+<span class="fc" id="L32">                .&lt;AssociateResponse&gt;builder()</span>
+<span class="fc" id="L33">                .status(SUCCESS)</span>
+<span class="fc" id="L34">                .results(associateResponse)</span>
+<span class="fc" id="L35">                .build();</span>
+<span class="fc" id="L36">        log.info(&quot;AssociateController::createAssociate response {}&quot;,responseDTO);</span>
+
+<span class="fc" id="L38">        return new ResponseEntity&lt;&gt;(responseDTO, HttpStatus.CREATED);</span>
+    }
+
+    @GetMapping(&quot;{gender}&quot;)
+    public ResponseEntity&lt;APIResponse&lt;Page&lt;AssociateResponse&gt;&gt;&gt; getAllAssociates(@RequestParam int pageNumber, @RequestParam int pageSize,@PathVariable String gender)
+    {
+<span class="fc" id="L44">        log.info(&quot;AssociateController::getAllAssociates invoked&quot;);</span>
+<span class="fc" id="L45">        Page&lt;AssociateResponse&gt; associateResponses = associateService.getAssociatesByGender(pageNumber-1,pageSize,gender);</span>
+        APIResponse&lt;Page&lt;AssociateResponse&gt;&gt; responseDTO = APIResponse
+<span class="fc" id="L47">                .&lt;Page&lt;AssociateResponse&gt;&gt;builder()</span>
+<span class="fc" id="L48">                .status(SUCCESS)</span>
+<span class="fc" id="L49">                .results(associateResponses)</span>
+<span class="fc" id="L50">                .build();</span>
+<span class="fc" id="L51">        log.info(&quot;AssociateController::getAllAssociates response {}&quot;,responseDTO);</span>
+<span class="fc" id="L52">        return new ResponseEntity&lt;&gt;(responseDTO, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;get-associate/{associateId}&quot;)
+    public ResponseEntity&lt;APIResponse&lt;AssociateResponse&gt;&gt; getAssociateById(@PathVariable long associateId)
+    {
+<span class="fc" id="L58">        log.info(&quot;AssociateController::getAssociateById invoked&quot;);</span>
+<span class="fc" id="L59">        AssociateResponse associateResponse = associateService.getAssociateById(associateId);</span>
+        APIResponse&lt;AssociateResponse&gt; responseDTO = APIResponse
+<span class="fc" id="L61">                .&lt;AssociateResponse&gt;builder()</span>
+<span class="fc" id="L62">                .status(SUCCESS)</span>
+<span class="fc" id="L63">                .results(associateResponse)</span>
+<span class="fc" id="L64">                .build();</span>
+<span class="fc" id="L65">        log.info(&quot;AssociateController::getAssociateById response {}&quot;,responseDTO);</span>
+
+<span class="fc" id="L67">        return new ResponseEntity&lt;&gt;(responseDTO, HttpStatus.OK);</span>
+    }
+
+    @PutMapping(&quot;{associateId}&quot;)
+    public ResponseEntity&lt;APIResponse&lt;AssociateResponse&gt;&gt; updateAssociate(@RequestBody @Valid AssociateRequest associateRequest,@PathVariable long associateId)
+    {
+<span class="fc" id="L73">        log.info(&quot;AssociateController::updateAssociate invoked&quot;);</span>
+<span class="fc" id="L74">        AssociateResponse associateResponse = associateService.updateAssociate(associateRequest,associateId);</span>
+        APIResponse&lt;AssociateResponse&gt; responseDTO = APIResponse
+<span class="fc" id="L76">                .&lt;AssociateResponse&gt;builder()</span>
+<span class="fc" id="L77">                .status(SUCCESS)</span>
+<span class="fc" id="L78">                .results(associateResponse)</span>
+<span class="fc" id="L79">                .build();</span>
+<span class="fc" id="L80">        log.info(&quot;AssociateController::updateAssociate response {}&quot;,responseDTO);</span>
+
+<span class="fc" id="L82">        return new ResponseEntity&lt;&gt;(responseDTO, HttpStatus.OK);</span>
+    }
+
+    @DeleteMapping(&quot;{associateId}&quot;)
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteBatch(@PathVariable int associateId) {
+<span class="fc" id="L88">        associateService.deleteAssociate(associateId);</span>
+<span class="fc" id="L89">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

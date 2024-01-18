@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java-RD</a> &gt; <a href="index.source.html" class="el_package">com.epam.handler</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.epam.handler;
+
+import com.epam.dtos.APIResponse;
+import com.epam.dtos.ErrorResponse;
+import com.epam.dtos.FieldError;
+import com.epam.exception.AssociateException;
+import com.epam.exception.BatchException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+@RestControllerAdvice
+<span class="fc" id="L22">@Slf4j</span>
+<span class="fc" id="L23">public class GlobalExceptionHandler {</span>
+    private static final String FAILED = &quot;FAILED&quot;;
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public APIResponse&lt;ErrorResponse&gt; handleMethodArgumentException(MethodArgumentNotValidException exception) {
+<span class="fc" id="L29">        log.error(&quot;GlobalExceptionHandler:handleMethodArgumentException is invoked {}&quot;,exception.getMessage());</span>
+<span class="fc" id="L30">        ErrorResponse errors = ErrorResponse.builder()</span>
+<span class="fc" id="L31">                        .time(new Date().toString()).fieldErrors(new ArrayList&lt;&gt;()).build();</span>
+<span class="fc" id="L32">        exception.getBindingResult().getFieldErrors()</span>
+<span class="fc" id="L33">                .forEach(error -&gt; {</span>
+<span class="fc" id="L34">                    FieldError fieldError = new FieldError(error.getField(), error.getDefaultMessage());</span>
+<span class="fc" id="L35">                    errors.getFieldErrors().add(fieldError);</span>
+<span class="fc" id="L36">                });</span>
+
+<span class="fc" id="L38">        return APIResponse.&lt;ErrorResponse&gt;builder().status(FAILED).results(errors).build();</span>
+    }
+
+    @ExceptionHandler(AssociateException.class)
+    public APIResponse&lt;ErrorResponse&gt; handleServiceException(AssociateException exception) {
+<span class="fc" id="L43">        log.error(&quot;GlobalExceptionHandler: handleServiceException is invoked {}&quot;,exception.getMessage());</span>
+<span class="fc" id="L44">        return getErrorResponseAPIResponse( exception.getMessage());</span>
+    }
+
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public APIResponse&lt;ErrorResponse&gt; handleRuntimeException(RuntimeException exception,WebRequest webRequest) {
+<span class="fc" id="L51">        log.error(&quot;GlobalExceptionHandler:handleRuntimeException is invoked {}&quot;,exception.getMessage());</span>
+<span class="fc" id="L52">        return getErrorResponseAPIResponse( exception.getMessage());</span>
+    }
+
+    private APIResponse&lt;ErrorResponse&gt; getErrorResponseAPIResponse( String message) {
+<span class="fc" id="L56">        ErrorResponse errors = ErrorResponse.builder()</span>
+<span class="fc" id="L57">                .time(new Date().toString()).fieldErrors(new ArrayList&lt;&gt;()).build();</span>
+
+<span class="fc" id="L59">        errors.getFieldErrors().add(FieldError.builder().errorMessage(message).build());</span>
+<span class="fc" id="L60">        return APIResponse.&lt;ErrorResponse&gt;builder().status(FAILED).results(errors).build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
