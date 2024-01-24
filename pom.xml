@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.epam</groupId>
-    <artifactId>Java-RD</artifactId>
+    <artifactId>SpringBoot-Jacoco-Sonar-Jenkins-Sample</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Java-RD</name>
-    <description>Java-RD</description>
+    <name>SpringBoot-Jacoco-Sonar-Jenkins-Sample</name>
+    <description>SpringBoot-Jacoco-Sonar-Jenkins-Sample</description>
     <properties>
         <java.version>17</java.version>
         <sonar.login>admin</sonar.login>
