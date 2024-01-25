@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.epam</groupId>
-    <artifactId>SpringBoot-Jacoco-Sonar-Jenkins-Sample</artifactId>
+    <artifactId>springboot-jacoco-sonar-jenkins</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>SpringBoot-Jacoco-Sonar-Jenkins-Sample</name>
     <description>SpringBoot-Jacoco-Sonar-Jenkins-Sample</description>
